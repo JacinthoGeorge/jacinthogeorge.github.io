@@ -112,33 +112,9 @@
         <!-- Scripts das funções -->
         <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
         <script>
-            // Sons de interação
-            const sons = {
-                abrir: new Audio('https://assets.mixkit.co/active_storage/sfx/1637/1637-preview.mp3'), // pop modal
-                card: new Audio('https://assets.mixkit.co/active_storage/sfx/1994/1994-preview.mp3'), // clique card
-                erro: new Audio('https://assets.mixkit.co/active_storage/sfx/950/950-preview.mp3'), // erro
-                sucesso: new Audio('https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3'), // sucesso
-            };
-
-            // Toca som ao abrir modal
-            function tocarSom(tipo) {
-                if (sons[tipo]) {
-                    try {
-                        sons[tipo].currentTime = 0;
-                        const playPromise = sons[tipo].play();
-                        if (playPromise !== undefined) {
-                            playPromise.catch(function (err) {
-                                console.warn('Navegador bloqueou o som:', err);
-                            });
-                        }
-                    } catch (e) {
-                        console.warn('Erro ao tentar tocar som:', e);
-                    }
-                }
-            }
             // Modal de ferramentas utilitárias (inclui consulta de CNPJ)
             function abrirModalTool(tool) {
-                tocarSom('abrir');
+                // som removido
                 let html = '';
                 if (tool === 'consultacnpj') {
                     html = `<div class='p-0 sm:p-6 w-full'>
@@ -195,8 +171,7 @@
                 document.getElementById('modal-bg').classList.remove('hidden');
                 document.getElementById('modal-card').classList.remove('hidden');
                 document.getElementById('dados').innerHTML = html;
-                // Toca som ao clicar em card
-                tocarSom('card');
+                // som removido
                 // Sempre reatribui eventos de fechar ao abrir qualquer modal
                 atribuirEventosFecharModal();
                 // Máscara e evento de busca para o input do modal de CNPJ
@@ -215,10 +190,8 @@
                         const cnpj = input.value.replace(/\D/g, '');
                         if (cnpj.length === 14) {
                             buscarCNPJModal(cnpj);
-                            tocarSom('sucesso');
                         } else {
                             document.getElementById('resultadoCnpjModal').innerHTML = `<div class='flex flex-col items-center py-8'><span class='material-symbols-rounded text-red-400 text-6xl mb-4'>error</span><div class='text-red-600 font-semibold text-lg'>CNPJ inválido!</div></div>`;
-                            tocarSom('erro');
                         }
                     });
                     input.addEventListener('keydown', function (e) {
@@ -392,14 +365,14 @@
             }
             // Gerador de IE fictícia
             function gerarIE() {
-                tocarSom('sucesso');
+                // som removido
                 const uf = ["SP", "RJ", "MG", "RS", "PR", "SC", "BA", "GO", "PE", "CE", "ES", "PA", "MT", "MS", "MA", "PB", "RN", "AL", "PI", "DF", "SE", "AM", "RO", "TO", "AC", "AP", "RR"].sort(() => 0.5 - Math.random())[0];
                 const num = Math.floor(10000000 + Math.random() * 90000000);
                 document.getElementById('resultadoIE').innerText = `IE: ${num}-${uf}`;
             }
             // Gerador de Nome Fantasia/Razão Social fictício
             function gerarNomeFantasia() {
-                tocarSom('sucesso');
+                // som removido
                 const nomes = [
                     "Alpha Solutions", "Beta Comércio", "Delta Serviços", "Nova Era", "Mundo Digital", "Super Mais", "Conecta Fácil", "Primeira Opção", "Viva Bem", "Top Center", "Central Mix", "Fácil Express", "Mega Store", "Ideal Service", "Master Tech"
                 ];
@@ -407,14 +380,14 @@
             }
             // Gerador de telefone comercial fictício
             function gerarTelefone() {
-                tocarSom('sucesso');
+                // som removido
                 const ddd = [11, 21, 31, 41, 51, 61, 71, 81, 91][Math.floor(Math.random() * 9)];
                 const num = Math.floor(30000000 + Math.random() * 69999999);
                 document.getElementById('resultadoTelefone').innerText = `(${ddd}) ${num.toString().replace(/(\d{4})(\d{4})/, '$1-$2')}`;
             }
             // Gerador de e-mail corporativo fictício
             function gerarEmail() {
-                tocarSom('sucesso');
+                // som removido
                 const nomes = ["contato", "vendas", "comercial", "financeiro", "suporte", "rh", "sac", "info"];
                 const doms = ["@empresa.com.br", "@negocio.com", "@corp.com.br", "@exemplo.com", "@ficticio.com.br"];
                 const email = nomes[Math.floor(Math.random() * nomes.length)] + doms[Math.floor(Math.random() * doms.length)];
@@ -423,7 +396,7 @@
 
             // Gerador de chave PIX fictícia
             function gerarPix() {
-                tocarSom('sucesso');
+                // som removido
                 const tipos = ['CPF', 'CNPJ', 'E-mail', 'Telefone', 'Aleatória'];
                 const tipo = tipos[Math.floor(Math.random() * tipos.length)];
                 let chave = '';
@@ -443,7 +416,7 @@
 
             // Gerador de senha forte
             function gerarSenha() {
-                tocarSom('sucesso');
+                // som removido
                 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
                 let senha = '';
                 for (let i = 0; i < 12; i++) senha += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -452,7 +425,7 @@
 
             // Gerador de placa veicular (padrão Mercosul)
             function gerarPlaca() {
-                tocarSom('sucesso');
+                // som removido
                 const letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
                 const nums = '0123456789';
                 let placa = '';
@@ -465,7 +438,7 @@
 
             // Gerador de CEP fictício
             function gerarCEP() {
-                tocarSom('sucesso');
+                // som removido
                 const cep = (Math.floor(10000000 + Math.random() * 89999999)).toString().replace(/(\d{5})(\d{3})/, '$1-$2');
                 document.getElementById('resultadoCEP').innerText = cep;
             }
