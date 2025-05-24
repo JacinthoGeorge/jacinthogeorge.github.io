@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta CNPJ</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Material Symbols (Material Design Icons) - Rounded -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+        rel="stylesheet" />
+    <style>
+        .material-symbols-rounded {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24;
+            vertical-align: middle;
+            display: inline-flex;
+            align-items: center;
+        }
+    </style>
+    <style>
+        body {
+            min-height: 100vh;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-100 to-blue-100 min-h-screen">
+    <div class="w-full px-2 sm:px-4 mt-10">
+        <!-- Removido o formulário fixo de consulta de CNPJ para deixar apenas o card na toolbox -->
+        <!-- Painel de ferramentas -->
+        <div class="w-full max-w-6xl mx-auto mt-10">
+            <div class="flex items-center gap-3 mb-6 px-2 sm:px-0">
+                <span
+                    class="material-symbols-rounded text-blue-700 text-3xl bg-blue-100 rounded-full p-2 shadow">widgets</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm">Painel de
+                    ferramentas</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button onclick="abrirModalTool('consultacnpj')"
+                    class="group bg-neutral-50 rounded-lg shadow flex flex-col items-center justify-center aspect-square p-4 hover:bg-blue-100 transition">
+                    <span class="material-symbols-rounded text-blue-700 text-4xl mb-2">business</span>
+                    <span class="font-semibold text-slate-700 text-sm">Consulta de CNPJ</span>
+                </button>
+                <button onclick="abrirModalTool('cpfcnpj')"
+                    class="group bg-neutral-50 rounded-lg shadow flex flex-col items-center justify-center aspect-square p-4 hover:bg-blue-50 transition">
+                    <span class="material-symbols-rounded text-blue-500 text-4xl mb-2">fact_check</span>
+                    <span class="font-semibold text-slate-700 text-sm">Validador de CPF/CNPJ</span>
+                </button>
+                <button onclick="abrirModalTool('qrcode')"
+                    class="group bg-neutral-50 rounded-lg shadow flex flex-col items-center justify-center aspect-square p-4 hover:bg-green-50 transition">
+                    <span class="material-symbols-rounded text-green-600 text-4xl mb-2">qr_code</span>
+                    <span class="font-semibold text-slate-700 text-sm">Gerador de QR Code</span>
+                </button>
+                <button onclick="abrirModalTool('simples')"
+                    class="group bg-neutral-50 rounded-lg shadow flex flex-col items-center justify-center aspect-square p-4 hover:bg-yellow-50 transition">
+                    <span class="material-symbols-rounded text-yellow-600 text-4xl mb-2">calculate</span>
+                    <span class="font-semibold text-slate-700 text-sm">Simulador Simples Nacional</span>
+                </button>
+                <button onclick="abrirModalTool('das')"
+                    class="group bg-neutral-50 rounded-lg shadow flex flex-col items-center justify-center aspect-square p-4 hover:bg-purple-50 transition">
+                    <span class="material-symbols-rounded text-purple-600 text-4xl mb-2">receipt_long</span>
+                    <span class="font-semibold text-slate-700 text-sm">Simulador DAS MEI</span>
+                </button>
+                <button onclick="abrirModalTool('ie')"
+                    class="group bg-neutral-50 rounded-lg shadow flex flex-col items-center justify-center aspect-square p-4 hover:bg-orange-50 transition">
+                    <span class="material-symbols-rounded text-orange-500 text-4xl mb-2">badge</span>
+                    <span class="font-semibold text-slate-700 text-sm">Gerador de IE Fictícia</span>
+                </button>
+                <button onclick="abrirModalTool('nome')"
+                    class="group bg-neutral-50 rounded-lg shadow flex flex-col items-center justify-center aspect-square p-4 hover:bg-cyan-50 transition">
+                    <span class="material-symbols-rounded text-cyan-600 text-4xl mb-2">storefront</span>
+                    <span class="font-semibold text-slate-700 text-sm">Gerador de Nome Fantasia</span>
+                </button>
+                <button onclick="abrirModalTool('telefone')"
+                    class="group bg-neutral-50 rounded-lg shadow flex flex-col items-center justify-center aspect-square p-4 hover:bg-lime-50 transition">
+                    <span class="material-symbols-rounded text-lime-600 text-4xl mb-2">call</span>
+                    <span class="font-semibold text-slate-700 text-sm">Gerador de Telefone</span>
+                </button>
+                <button onclick="abrirModalTool('email')"
+                    class="group bg-neutral-50 rounded-lg shadow flex flex-col items-center justify-center aspect-square p-4 hover:bg-pink-50 transition">
+                    <span class="material-symbols-rounded text-pink-600 text-4xl mb-2">mail</span>
+                    <span class="font-semibold text-slate-700 text-sm">Gerador de E-mail</span>
+                </button>
+                <button onclick="abrirModalTool('pix')"
+                    class="group bg-neutral-50 rounded-lg shadow flex flex-col items-center justify-center aspect-square p-4 hover:bg-fuchsia-50 transition">
+                    <span class="material-symbols-rounded text-fuchsia-600 text-4xl mb-2">payments</span>
+                    <span class="font-semibold text-slate-700 text-sm">Gerador de Chave PIX</span>
+                </button>
+                <button onclick="abrirModalTool('senha')"
+                    class="group bg-neutral-50 rounded-lg shadow flex flex-col items-center justify-center aspect-square p-4 hover:bg-gray-100 transition">
+                    <span class="material-symbols-rounded text-gray-700 text-4xl mb-2">lock</span>
+                    <span class="font-semibold text-slate-700 text-sm">Gerador de Senha Forte</span>
+                </button>
+                <button onclick="abrirModalTool('placa')"
+                    class="group bg-neutral-50 rounded-lg shadow flex flex-col items-center justify-center aspect-square p-4 hover:bg-indigo-50 transition">
+                    <span class="material-symbols-rounded text-indigo-600 text-4xl mb-2">directions_car</span>
+                    <span class="font-semibold text-slate-700 text-sm">Gerador de Placa Veicular</span>
+                </button>
+                <button onclick="abrirModalTool('cep')"
+                    class="group bg-neutral-50 rounded-lg shadow flex flex-col items-center justify-center aspect-square p-4 hover:bg-teal-50 transition">
+                    <span class="material-symbols-rounded text-teal-600 text-4xl mb-2">location_on</span>
+                    <span class="font-semibold text-slate-700 text-sm">Gerador de CEP</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Scripts das funções -->
+        <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+        <script>
+            // Sons de interação
+            const sons = {
+                abrir: new Audio('https://assets.mixkit.co/active_storage/sfx/1637/1637-preview.mp3'), // pop modal
+                card: new Audio('https://assets.mixkit.co/active_storage/sfx/1994/1994-preview.mp3'), // clique card
+                erro: new Audio('https://assets.mixkit.co/active_storage/sfx/950/950-preview.mp3'), // erro
+                sucesso: new Audio('https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3'), // sucesso
+            };
+
+            // Toca som ao abrir modal
+            function tocarSom(tipo) {
+                if (sons[tipo]) {
+                    try {
+                        sons[tipo].currentTime = 0;
+                        const playPromise = sons[tipo].play();
+                        if (playPromise !== undefined) {
+                            playPromise.catch(function (err) {
+                                console.warn('Navegador bloqueou o som:', err);
+                            });
+                        }
+                    } catch (e) {
+                        console.warn('Erro ao tentar tocar som:', e);
+                    }
+                }
+            }
+            // Modal de ferramentas utilitárias (inclui consulta de CNPJ)
+            function abrirModalTool(tool) {
+                tocarSom('abrir');
+                let html = '';
+                if (tool === 'consultacnpj') {
+                    html = `<div class='p-0 sm:p-6 w-full'>
+                    <h2 class='text-lg font-bold mb-4 flex items-center gap-2'>
+                        <span class='material-symbols-rounded text-blue-700'>business</span>Consulta de CNPJ
+                    </h2>
+                    <div class='flex mb-2'>
+                        <input type='text' id='cnpjInputModal' class='flex-1 rounded-l-lg border border-gray-300 px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-400' placeholder='Digite o CNPJ' maxlength='18' />
+                        <button id='buscarBtnModal' class='rounded-r-lg bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg font-semibold transition-colors flex items-center gap-2'>
+                            <span class='material-symbols-rounded text-white text-xl'>search</span>
+                            Buscar
+                        </button>
+                    </div>
+                    <div class='text-center text-gray-500 text-xs mb-2'>Exemplo: 00.000.000/0001-91</div>
+                    <div id='resultadoCnpjModal'></div>
+                </div>`;
+                }
+                if (tool === 'cpfcnpj') {
+                    html = `<div class='p-6'><h2 class='text-lg font-bold mb-4 flex items-center gap-2'><span class='material-symbols-rounded text-blue-500'>fact_check</span>Validador de CPF/CNPJ</h2><input type='text' id='docInput' class='border border-neutral-200 w-full rounded px-3 py-2 mb-2' placeholder='Digite o CPF ou CNPJ'><button onclick='validarDocumento()' class='bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'>Validar</button><p id='resultadoValidacao' class='mt-2 text-sm'></p></div>`;
+                }
+                if (tool === 'qrcode') {
+                    html = `<div class='p-6'><h2 class='text-lg font-bold mb-4 flex items-center gap-2'><span class='material-symbols-rounded text-green-600'>qr_code</span>Gerador de QR Code</h2><input type='text' id='qrInput' class='border border-neutral-200 w-full rounded px-3 py-2 mb-2' placeholder='Texto ou chave PIX'><button onclick='gerarQRCode()' class='bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700'>Gerar</button><div id='qrcode' class='mt-4'></div></div>`;
+                }
+                if (tool === 'simples') {
+                    html = `<div class='p-6'><h2 class='text-lg font-bold mb-4 flex items-center gap-2'><span class='material-symbols-rounded text-yellow-600'>calculate</span>Simulador Simples Nacional</h2><input type='number' id='faturamentoInput' class='border border-neutral-200 w-full rounded px-3 py-2 mb-2' placeholder='Faturamento anual (R$)'><select id='anexoInput' class='border border-neutral-200 w-full rounded px-3 py-2 mb-2'><option value='I'>Anexo I (Comércio)</option><option value='II'>Anexo II (Indústria)</option><option value='III'>Anexo III (Serviços)</option><option value='IV'>Anexo IV (Serviços com encargos)</option><option value='V'>Anexo V (Serviços específicos)</option></select><button onclick='simularSimples()' class='bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700'>Calcular</button><p id='resultadoSimples' class='mt-2 text-sm'></p></div>`;
+                }
+                if (tool === 'das') {
+                    html = `<div class='p-6'><h2 class='text-lg font-bold mb-4 flex items-center gap-2'><span class='material-symbols-rounded text-purple-600'>receipt_long</span>Simulador DAS MEI</h2><select id='tipoMei' class='border border-neutral-200 w-full rounded px-3 py-2 mb-2'><option value='comercio'>Comércio</option><option value='servico'>Serviço</option><option value='ambos'>Comércio e Serviço</option></select><button onclick='simularDAS()' class='bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700'>Simular</button><p id='resultadoDAS' class='mt-2 text-sm'></p></div>`;
+                }
+                if (tool === 'ie') {
+                    html = `<div class='p-6'><h2 class='text-lg font-bold mb-4 flex items-center gap-2'><span class='material-symbols-rounded text-orange-500'>badge</span>Gerador de IE Fictícia</h2><button onclick='gerarIE()' class='bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600'>Gerar IE</button><p id='resultadoIE' class='mt-2 text-sm'></p></div>`;
+                }
+                if (tool === 'nome') {
+                    html = `<div class='p-6'><h2 class='text-lg font-bold mb-4 flex items-center gap-2'><span class='material-symbols-rounded text-cyan-600'>storefront</span>Gerador de Nome Fantasia</h2><button onclick='gerarNomeFantasia()' class='bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-700'>Gerar Nome</button><p id='resultadoNomeFantasia' class='mt-2 text-sm'></p></div>`;
+                }
+                if (tool === 'telefone') {
+                    html = `<div class='p-6'><h2 class='text-lg font-bold mb-4 flex items-center gap-2'><span class='material-symbols-rounded text-lime-600'>call</span>Gerador de Telefone Comercial</h2><button onclick='gerarTelefone()' class='bg-lime-600 text-white px-4 py-2 rounded hover:bg-lime-700'>Gerar Telefone</button><p id='resultadoTelefone' class='mt-2 text-sm'></p></div>`;
+                }
+                if (tool === 'email') {
+                    html = `<div class='p-6'><h2 class='text-lg font-bold mb-4 flex items-center gap-2'><span class='material-symbols-rounded text-pink-600'>mail</span>Gerador de E-mail Corporativo</h2><button onclick='gerarEmail()' class='bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-700'>Gerar E-mail</button><p id='resultadoEmail' class='mt-2 text-sm'></p></div>`;
+                }
+                if (tool === 'pix') {
+                    html = `<div class='p-6'><h2 class='text-lg font-bold mb-4 flex items-center gap-2'><span class='material-symbols-rounded text-fuchsia-600'>payments</span>Gerador de Chave PIX</h2><button onclick='gerarPix()' class='bg-fuchsia-600 text-white px-4 py-2 rounded hover:bg-fuchsia-700'>Gerar Chave PIX</button><p id='resultadoPix' class='mt-2 text-sm'></p></div>`;
+                }
+                if (tool === 'senha') {
+                    html = `<div class='p-6'><h2 class='text-lg font-bold mb-4 flex items-center gap-2'><span class='material-symbols-rounded text-gray-700'>lock</span>Gerador de Senha Forte</h2><button onclick='gerarSenha()' class='bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800'>Gerar Senha</button><p id='resultadoSenha' class='mt-2 text-sm'></p></div>`;
+                }
+                if (tool === 'placa') {
+                    html = `<div class='p-6'><h2 class='text-lg font-bold mb-4 flex items-center gap-2'><span class='material-symbols-rounded text-indigo-600'>directions_car</span>Gerador de Placa Veicular</h2><button onclick='gerarPlaca()' class='bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700'>Gerar Placa</button><p id='resultadoPlaca' class='mt-2 text-sm'></p></div>`;
+                }
+                if (tool === 'cep') {
+                    html = `<div class='p-6'><h2 class='text-lg font-bold mb-4 flex items-center gap-2'><span class='material-symbols-rounded text-teal-600'>location_on</span>Gerador de CEP</h2><button onclick='gerarCEP()' class='bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700'>Gerar CEP</button><p id='resultadoCEP' class='mt-2 text-sm'></p></div>`;
+                }
+                document.getElementById('modal-bg').classList.remove('hidden');
+                document.getElementById('modal-card').classList.remove('hidden');
+                document.getElementById('dados').innerHTML = html;
+                // Toca som ao clicar em card
+                tocarSom('card');
+                // Sempre reatribui eventos de fechar ao abrir qualquer modal
+                atribuirEventosFecharModal();
+                // Máscara e evento de busca para o input do modal de CNPJ
+                if (tool === 'consultacnpj') {
+                    const input = document.getElementById('cnpjInputModal');
+                    input.addEventListener('input', function (e) {
+                        let value = e.target.value.replace(/\D/g, '');
+                        if (value.length > 14) value = value.slice(0, 14);
+                        value = value.replace(/(\d{2})(\d)/, '$1.$2');
+                        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                        value = value.replace(/(\d{3})(\d)/, '$1/$2');
+                        value = value.replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+                        e.target.value = value;
+                    });
+                    document.getElementById('buscarBtnModal').addEventListener('click', function () {
+                        const cnpj = input.value.replace(/\D/g, '');
+                        if (cnpj.length === 14) {
+                            buscarCNPJModal(cnpj);
+                            tocarSom('sucesso');
+                        } else {
+                            document.getElementById('resultadoCnpjModal').innerHTML = `<div class='flex flex-col items-center py-8'><span class='material-symbols-rounded text-red-400 text-6xl mb-4'>error</span><div class='text-red-600 font-semibold text-lg'>CNPJ inválido!</div></div>`;
+                            tocarSom('erro');
+                        }
+                    });
+                    input.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter') {
+                            document.getElementById('buscarBtnModal').click();
+                        }
+                    });
+                }
+            }
+            // Consulta de CNPJ no modal
+            // Consulta de CNPJ detalhada no modal (com abas e todas as informações)
+            async function buscarCNPJModal(cnpj) {
+                const resultado = document.getElementById('resultadoCnpjModal');
+                resultado.innerHTML = `<div class="flex flex-col items-center py-16"><span class="animate-spin rounded-full border-4 border-blue-200 border-t-blue-600 h-16 w-16 mb-4"></span><div class="text-blue-600 font-semibold">Carregando...</div></div>`;
+                try {
+                    const response = await fetch(`https://open.cnpja.com/office/${cnpj}`);
+                    const data = await response.json();
+                    if (!data || !data.company) {
+                        resultado.innerHTML = `<div class='flex flex-col items-center py-8'><span class='material-symbols-rounded text-red-400 text-6xl mb-4'>error</span><div class='text-red-600 font-semibold text-lg'>CNPJ não encontrado!</div></div>`;
+                        return;
+                    }
+                    // Replicar o mesmo layout detalhado da função buscarCNPJ
+                    // Dados principais
+                    const company = data.company || {};
+                    const address = data.address || {};
+                    const phone = (data.phones && data.phones[0]) ? `(${data.phones[0].area}) ${data.phones[0].number}` : '';
+                    const email = (data.emails && data.emails[0]) ? data.emails[0].address : '';
+                    const natureza = company.nature ? company.nature.text : '';
+                    const situacao = data.status ? data.status.text : '';
+                    const capital = company.equity ? company.equity.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '';
+                    const dataAbertura = data.founded || '';
+                    const nomeFantasia = data.alias || '';
+                    const endereco = `${address.street || ''}, ${address.number || ''} - ${address.district || ''}, ${address.city || ''} - ${address.state || ''}, CEP: ${address.zip || ''}`;
+                    const matrizFilial = data.head === false ? 'Filial' : 'Matriz';
+                    const cnaePrincipal = (data.mainActivity && data.mainActivity.text) ? data.mainActivity.text : '';
+                    const cnaePrincipalCode = (data.mainActivity && (data.mainActivity.id || data.mainActivity.code)) ? (data.mainActivity.id || data.mainActivity.code) : '';
+                    const capitalSocial = company.equity ? company.equity.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '';
+                    const motivoSituacao = data.status && data.status.reason ? data.status.reason : '';
+                    const dataSituacao = data.statusDate || '';
+                    const responsavel = company.members && company.members.length ? company.members[0].person.name : '';
+                    const emailResponsavel = email;
+                    const site = (data.emails && data.emails[0] && data.emails[0].domain) ? `https://${data.emails[0].domain}` : '';
+                    const observacoes = '';
+                    const atualizacao = data.updated ? new Date(data.updated).toLocaleString('pt-BR') : '';
+
+                    // Sócios/administradores
+                    let membrosHtml = '<div class="text-muted">Nenhum sócio/administrador encontrado.</div>';
+                    if (company.members && company.members.length) {
+                        membrosHtml = '<ul class="list-group list-group-flush">' + company.members.map(m => `
+                            <li class="list-group-item">
+                                <strong>${m.person.name}</strong> (${m.role.text})<br>
+                                Idade: ${m.person.age} | Desde: ${m.since}<br>
+                                <span class="text-muted">CPF: ${m.person.taxId || '---'}</span>
+                            </li>
+                        `).join('') + '</ul>';
+                    }
+
+                    // Atividades secundárias
+                    let atividadesHtml = '<div class="text-muted">Nenhuma atividade secundária encontrada.</div>';
+                    if (data.sideActivities && data.sideActivities.length) {
+                        atividadesHtml = '<ul class="list-group list-group-flush">' + data.sideActivities.map(a => `<li class="list-group-item">${a.id} - ${a.text}</li>`).join('') + '</ul>';
+                    }
+
+                    // Inscrições estaduais/municipais
+                    let inscricoesHtml = '<div class="text-muted">Nenhuma inscrição encontrada.</div>';
+                    if (data.registrations && data.registrations.length) {
+                        inscricoesHtml = '<ul class="list-group list-group-flush">' + data.registrations.map(r => `
+                            <li class="list-group-item">
+                                <strong>IE:</strong> ${r.number} - <strong>UF:</strong> ${r.state} - <strong>Status:</strong> ${r.status.text} - <strong>Tipo:</strong> ${r.type.text} - <strong>Habilitada:</strong> ${r.enabled ? 'Sim' : 'Não'} - <strong>Data:</strong> ${r.statusDate}
+                            </li>
+                        `).join('') + '</ul>';
+                    }
+
+                    // Outras informações detalhadas
+                    let outrosHtml = `<div class="row g-2">
+                        <div class="col-md-6"><strong>Porte:</strong> ${company.size ? company.size.text : ''}</div>
+                        <div class="col-md-6"><strong>Opção pelo Simples:</strong> ${company.simples ? (company.simples.optant ? 'Sim' : 'Não') : ''}</div>
+                        <div class="col-md-6"><strong>Data Opção Simples:</strong> ${company.simples && company.simples.since ? company.simples.since : ''}</div>
+                        <div class="col-md-6"><strong>Atualização:</strong> ${atualizacao}</div>
+                        <div class="col-md-6"><strong>Responsável:</strong> ${responsavel}</div>
+                        <div class="col-md-6"><strong>Email Resp.:</strong> ${emailResponsavel}</div>
+                        <div class="col-md-6"><strong>Site:</strong> ${site ? `<a href='${site}' target='_blank'>${site}</a>` : ''}</div>
+                        <div class="col-md-6"><strong>Observações:</strong> ${observacoes}</div>
+                    </div>`;
+
+                    // Situação
+                    let situacaoHtml = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><strong>Situação:</strong> <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${situacao && situacao.toUpperCase() === 'ATIVA' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">${situacao}</span></div>
+                        <div><strong>Desde:</strong> ${dataSituacao || ''}</div>
+                        <div class="md:col-span-2"><strong>Motivo:</strong> ${motivoSituacao || ''}</div>
+                    </div>`;
+
+                    resultado.innerHTML = `
+                    <div class="bg-neutral-50 shadow-xl rounded-2xl mb-10 w-full">
+                      <div class="bg-gradient-to-r from-slate-900 to-slate-700 rounded-t-2xl px-8 py-4">
+                        <h4 class="text-white text-2xl font-extrabold flex items-center gap-3 drop-shadow-sm">
+                          <span class="material-symbols-rounded text-white text-3xl">business</span>
+                          ${company.name || ''}
+                        </h4>
+                      </div>
+                      <div class="px-4 sm:px-8 py-6">
+                        <div class="flex flex-wrap gap-2 border-b border-neutral-200 mb-6" id="tabs-bar-modal">
+                          <button class="tab-btn px-4 py-2 font-semibold text-slate-900 border-b-2 border-slate-900 bg-slate-100 rounded-t flex items-center gap-1 transition-colors" id="tab-principal-modal">
+                            <span class="material-symbols-rounded text-slate-900 text-base">info</span>
+                            Principal
+                          </button>
+                          <button class="tab-btn px-4 py-2 font-semibold text-neutral-500 hover:text-slate-900 flex items-center gap-1 transition-colors" id="tab-situacao-modal">
+                            <span class="material-symbols-rounded text-neutral-500 text-base">verified_user</span>
+                            Situação
+                          </button>
+                          <button class="tab-btn px-4 py-2 font-semibold text-neutral-500 hover:text-slate-900 flex items-center gap-1 transition-colors" id="tab-socios-modal">
+                            <span class="material-symbols-rounded text-neutral-500 text-base">groups</span>
+                            Sócios
+                          </button>
+                          <button class="tab-btn px-4 py-2 font-semibold text-neutral-500 hover:text-slate-900 flex items-center gap-1 transition-colors" id="tab-atividades-modal">
+                            <span class="material-symbols-rounded text-neutral-500 text-base">work</span>
+                            Atividades
+                          </button>
+                          <button class="tab-btn px-4 py-2 font-semibold text-neutral-500 hover:text-slate-900 flex items-center gap-1 transition-colors" id="tab-inscricoes-modal">
+                            <span class="material-symbols-rounded text-neutral-500 text-base">badge</span>
+                            Inscrições
+                          </button>
+                          <button class="tab-btn px-4 py-2 font-semibold text-neutral-500 hover:text-slate-900 flex items-center gap-1 transition-colors" id="tab-outros-modal">
+                            <span class="material-symbols-rounded text-neutral-500 text-base">more_horiz</span>
+                            Outros
+                          </button>
+                        </div>
+                        <div id="pane-principal-modal" class="tab-pane block">
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">badge</span>CNPJ:</span> ${mascaraDado('cnpj', data.taxId || '')}</div>
+                            <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">storefront</span>Nome Fantasia:</span> ${nomeFantasia}</div>
+                            <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">business</span>Razão Social:</span> ${company.name || ''}</div>
+                            <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">apartment</span>Matriz/Filial:</span> ${matrizFilial}</div>
+                            <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">event</span>Data de Abertura:</span> ${mascaraDado('data', dataAbertura)}</div>
+                            <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">gavel</span>Natureza Jurídica:</span> ${natureza}</div>
+                            <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">payments</span>Capital Social:</span> ${capitalSocial}</div>
+                            <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">call</span>Telefone:</span> ${mascaraDado('telefone', phone)}</div>
+                            <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">mail</span>Email:</span> ${email}</div>
+                            <div class="md:col-span-2"><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">location_on</span>Endereço:</span> ${endereco}</div>
+                            <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">category</span>CNAE Principal:</span> ${cnaePrincipalCode} - ${cnaePrincipal}</div>
+                            <div class="md:col-span-2"><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">work</span>Atividade Principal:</span> ${cnaePrincipal}</div>
+                          </div>
+                        </div>
+                        <div id="pane-situacao-modal" class="tab-pane hidden">${situacaoHtml}</div>
+                        <div id="pane-socios-modal" class="tab-pane hidden">${membrosHtml}</div>
+                        <div id="pane-atividades-modal" class="tab-pane hidden">${atividadesHtml}</div>
+                        <div id="pane-inscricoes-modal" class="tab-pane hidden">${inscricoesHtml}</div>
+                        <div id="pane-outros-modal" class="tab-pane hidden">${outrosHtml}</div>
+                      </div>
+                    </div>
+                    `;
+                    // Tabs interatividade para o modal
+                    const tabIds = ['principal', 'situacao', 'socios', 'atividades', 'inscricoes', 'outros'];
+                    tabIds.forEach((id, idx) => {
+                        document.getElementById('tab-' + id + '-modal').onclick = function () {
+                            tabIds.forEach((tid, i) => {
+                                document.getElementById('tab-' + tid + '-modal').classList.remove('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+                                document.getElementById('tab-' + tid + '-modal').classList.add('text-gray-600');
+                                document.getElementById('pane-' + tid + '-modal').classList.add('hidden');
+                                document.getElementById('pane-' + tid + '-modal').classList.remove('block');
+                            });
+                            this.classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+                            this.classList.remove('text-gray-600');
+                            document.getElementById('pane-' + id + '-modal').classList.remove('hidden');
+                            document.getElementById('pane-' + id + '-modal').classList.add('block');
+                        };
+                    });
+                } catch (error) {
+                    resultado.innerHTML = '<div class="alert alert-danger">Erro ao buscar dados. Verifique o CNPJ e tente novamente.</div>';
+                }
+            }
+            // Gerador de IE fictícia
+            function gerarIE() {
+                tocarSom('sucesso');
+                const uf = ["SP", "RJ", "MG", "RS", "PR", "SC", "BA", "GO", "PE", "CE", "ES", "PA", "MT", "MS", "MA", "PB", "RN", "AL", "PI", "DF", "SE", "AM", "RO", "TO", "AC", "AP", "RR"].sort(() => 0.5 - Math.random())[0];
+                const num = Math.floor(10000000 + Math.random() * 90000000);
+                document.getElementById('resultadoIE').innerText = `IE: ${num}-${uf}`;
+            }
+            // Gerador de Nome Fantasia/Razão Social fictício
+            function gerarNomeFantasia() {
+                tocarSom('sucesso');
+                const nomes = [
+                    "Alpha Solutions", "Beta Comércio", "Delta Serviços", "Nova Era", "Mundo Digital", "Super Mais", "Conecta Fácil", "Primeira Opção", "Viva Bem", "Top Center", "Central Mix", "Fácil Express", "Mega Store", "Ideal Service", "Master Tech"
+                ];
+                document.getElementById('resultadoNomeFantasia').innerText = nomes[Math.floor(Math.random() * nomes.length)];
+            }
+            // Gerador de telefone comercial fictício
+            function gerarTelefone() {
+                tocarSom('sucesso');
+                const ddd = [11, 21, 31, 41, 51, 61, 71, 81, 91][Math.floor(Math.random() * 9)];
+                const num = Math.floor(30000000 + Math.random() * 69999999);
+                document.getElementById('resultadoTelefone').innerText = `(${ddd}) ${num.toString().replace(/(\d{4})(\d{4})/, '$1-$2')}`;
+            }
+            // Gerador de e-mail corporativo fictício
+            function gerarEmail() {
+                tocarSom('sucesso');
+                const nomes = ["contato", "vendas", "comercial", "financeiro", "suporte", "rh", "sac", "info"];
+                const doms = ["@empresa.com.br", "@negocio.com", "@corp.com.br", "@exemplo.com", "@ficticio.com.br"];
+                const email = nomes[Math.floor(Math.random() * nomes.length)] + doms[Math.floor(Math.random() * doms.length)];
+                document.getElementById('resultadoEmail').innerText = email;
+            }
+
+            // Gerador de chave PIX fictícia
+            function gerarPix() {
+                tocarSom('sucesso');
+                const tipos = ['CPF', 'CNPJ', 'E-mail', 'Telefone', 'Aleatória'];
+                const tipo = tipos[Math.floor(Math.random() * tipos.length)];
+                let chave = '';
+                if (tipo === 'CPF') {
+                    chave = (Math.floor(10000000000 + Math.random() * 89999999999)).toString().replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                } else if (tipo === 'CNPJ') {
+                    chave = (Math.floor(10000000000000 + Math.random() * 89999999999999)).toString().replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+                } else if (tipo === 'E-mail') {
+                    chave = 'pix' + Math.floor(Math.random() * 1000) + '@exemplo.com';
+                } else if (tipo === 'Telefone') {
+                    chave = '+55' + (11 + Math.floor(Math.random() * 89)) + (900000000 + Math.floor(Math.random() * 99999999));
+                } else {
+                    chave = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 34);
+                }
+                document.getElementById('resultadoPix').innerText = `Tipo: ${tipo}\nChave: ${chave}`;
+            }
+
+            // Gerador de senha forte
+            function gerarSenha() {
+                tocarSom('sucesso');
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
+                let senha = '';
+                for (let i = 0; i < 12; i++) senha += chars.charAt(Math.floor(Math.random() * chars.length));
+                document.getElementById('resultadoSenha').innerText = senha;
+            }
+
+            // Gerador de placa veicular (padrão Mercosul)
+            function gerarPlaca() {
+                tocarSom('sucesso');
+                const letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                const nums = '0123456789';
+                let placa = '';
+                for (let i = 0; i < 3; i++) placa += letras.charAt(Math.floor(Math.random() * letras.length));
+                placa += nums.charAt(Math.floor(Math.random() * nums.length));
+                placa += letras.charAt(Math.floor(Math.random() * letras.length));
+                for (let i = 0; i < 2; i++) placa += nums.charAt(Math.floor(Math.random() * nums.length));
+                document.getElementById('resultadoPlaca').innerText = placa;
+            }
+
+            // Gerador de CEP fictício
+            function gerarCEP() {
+                tocarSom('sucesso');
+                const cep = (Math.floor(10000000 + Math.random() * 89999999)).toString().replace(/(\d{5})(\d{3})/, '$1-$2');
+                document.getElementById('resultadoCEP').innerText = cep;
+            }
+            // (removido: bloco solto de geração de e-mail)
+            function validarDocumento() {
+                const doc = document.getElementById('docInput').value.replace(/\D/g, '');
+                let valido = false;
+                if (doc.length === 11) valido = validarCPF(doc);
+                else if (doc.length === 14) valido = validarCNPJ(doc);
+                document.getElementById('resultadoValidacao').innerText = valido ? 'Documento válido.' : 'Documento inválido.';
+            }
+
+            function validarCPF(cpf) {
+                if (!cpf || cpf.length !== 11 || /^([0-9])\1+$/.test(cpf)) return false;
+                let soma = 0;
+                for (let i = 0; i < 9; i++) soma += parseInt(cpf[i]) * (10 - i);
+                let resto = (soma * 10) % 11;
+                if (resto === 10 || resto === 11) resto = 0;
+                if (resto !== parseInt(cpf[9])) return false;
+                soma = 0;
+                for (let i = 0; i < 10; i++) soma += parseInt(cpf[i]) * (11 - i);
+                resto = (soma * 10) % 11;
+                if (resto === 10 || resto === 11) resto = 0;
+                return resto === parseInt(cpf[10]);
+            }
+
+            function validarCNPJ(cnpj) {
+                if (!cnpj || cnpj.length !== 14 || /^([0-9])\1+$/.test(cnpj)) return false;
+                let t = cnpj.length - 2, d = cnpj.substring(t), d1 = parseInt(d.charAt(0)), d2 = parseInt(d.charAt(1)), calc = x => {
+                    let n = cnpj.substring(0, x), y = x - 7, s = 0;
+                    for (let i = x; i >= 1; i--) s += n.charAt(x - i) * y--, y = y < 2 ? 9 : y;
+                    return 11 - (s % 11) < 10 ? 11 - (s % 11) : 0;
+                };
+                return calc(t) === d1 && calc(t + 1) === d2;
+            }
+
+            function gerarQRCode() {
+                const texto = document.getElementById('qrInput').value;
+                document.getElementById('qrcode').innerHTML = '';
+                QRCode.toCanvas(document.createElement('canvas'), texto, function (error, canvas) {
+                    if (error) return alert('Erro ao gerar QR Code');
+                    document.getElementById('qrcode').appendChild(canvas);
+                });
+            }
+
+            function simularSimples() {
+                const faturamento = parseFloat(document.getElementById('faturamentoInput').value);
+                const anexo = document.getElementById('anexoInput').value;
+                if (!faturamento || faturamento <= 0) return document.getElementById('resultadoSimples').innerText = 'Informe um valor válido';
+                let aliquota = 0;
+                if (anexo === 'I') aliquota = 0.06;
+                if (anexo === 'II') aliquota = 0.065;
+                if (anexo === 'III') aliquota = 0.06;
+                if (anexo === 'IV') aliquota = 0.045;
+                if (anexo === 'V') aliquota = 0.15;
+                const imposto = faturamento * aliquota;
+                document.getElementById('resultadoSimples').innerText = `Alíquota: ${(aliquota * 100).toFixed(2)}%. Imposto estimado: R$ ${imposto.toFixed(2)}`;
+            }
+
+            function simularDAS() {
+                const tipo = document.getElementById('tipoMei').value;
+                let valor = 0;
+                if (tipo === 'comercio') valor = 70.60;
+                else if (tipo === 'servico') valor = 75.60;
+                else valor = 76.60;
+                document.getElementById('resultadoDAS').innerText = `DAS MEI aproximado: R$ ${valor.toFixed(2)}`;
+            }
+        </script>
+        <!-- Modal -->
+        <div id="modal-bg" class="fixed inset-0 bg-black/40 z-40 hidden transition-all"></div>
+        <div id="modal-card" class="fixed inset-0 z-50 hidden">
+            <div class="flex items-center justify-center w-full h-full min-h-0">
+                <div
+                    class="bg-neutral-50 shadow-xl rounded-none w-full h-full animate-fade-in-up relative flex flex-col">
+                    <button id="fecharModal"
+                        class="absolute top-4 right-4 text-neutral-400 hover:text-rose-500 text-3xl focus:outline-none z-10 transition-colors"
+                        type="button">
+                        <span class="material-symbols-rounded">close</span>
+                    </button>
+                    <div id="dados" class="w-full flex-1 overflow-y-auto pt-2 pb-6 px-0 sm:px-0 scrollbar-hide"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Máscara para o input de CNPJ
+        document.getElementById('cnpjInput').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 14) value = value.slice(0, 14);
+            value = value.replace(/(\d{2})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1/$2');
+            value = value.replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+            e.target.value = value;
+        });
+
+        // Função para aplicar máscaras de exibição nos dados
+        function mascaraDado(tipo, valor) {
+            if (!valor) return '';
+            if (tipo === 'cnpj') {
+                return valor.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+            }
+            if (tipo === 'telefone') {
+                return valor.replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3');
+            }
+            if (tipo === 'cep') {
+                return valor.replace(/(\d{5})(\d{3})/, '$1-$2');
+            }
+            if (tipo === 'data') {
+                const d = new Date(valor);
+                if (!isNaN(d)) return d.toLocaleDateString('pt-BR');
+                return valor;
+            }
+            if (tipo === 'cpf') {
+                return valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            }
+            return valor;
+        }
+
+
+        async function buscarCNPJ(cnpj) {
+            // Exibe modal
+            document.getElementById('modal-bg').classList.remove('hidden');
+            document.getElementById('modal-card').classList.remove('hidden');
+            const container = document.getElementById('dados');
+            container.innerHTML = '<div class="flex flex-col items-center py-16"><span class="animate-spin rounded-full border-4 border-blue-200 border-t-blue-600 h-16 w-16 mb-4"></span><div class="text-blue-600 font-semibold">Carregando...</div></div>';
+            try {
+                const response = await fetch(`https://open.cnpja.com/office/${cnpj}`);
+                const data = await response.json();
+
+                // Dados principais
+                const company = data.company || {};
+                const address = data.address || {};
+                const phone = (data.phones && data.phones[0]) ? `(${data.phones[0].area}) ${data.phones[0].number}` : '';
+                const email = (data.emails && data.emails[0]) ? data.emails[0].address : '';
+                const natureza = company.nature ? company.nature.text : '';
+                const situacao = data.status ? data.status.text : '';
+                const capital = company.equity ? company.equity.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '';
+                const dataAbertura = data.founded || '';
+                const nomeFantasia = data.alias || '';
+                const endereco = `${address.street || ''}, ${address.number || ''} - ${address.district || ''}, ${address.city || ''} - ${address.state || ''}, CEP: ${address.zip || ''}`;
+                const matrizFilial = data.head === false ? 'Filial' : 'Matriz';
+                const cnaePrincipal = (data.mainActivity && data.mainActivity.text) ? data.mainActivity.text : '';
+                const cnaePrincipalCode = (data.mainActivity && (data.mainActivity.id || data.mainActivity.code)) ? (data.mainActivity.id || data.mainActivity.code) : '';
+                const capitalSocial = company.equity ? company.equity.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : '';
+                const motivoSituacao = data.status && data.status.reason ? data.status.reason : '';
+                const dataSituacao = data.statusDate || '';
+                const responsavel = company.members && company.members.length ? company.members[0].person.name : '';
+                const emailResponsavel = email;
+                const site = (data.emails && data.emails[0] && data.emails[0].domain) ? `https://${data.emails[0].domain}` : '';
+                const observacoes = '';
+                const atualizacao = data.updated ? new Date(data.updated).toLocaleString('pt-BR') : '';
+
+                // Sócios/administradores
+                let membrosHtml = '<div class="text-muted">Nenhum sócio/administrador encontrado.</div>';
+                if (company.members && company.members.length) {
+                    membrosHtml = '<ul class="list-group list-group-flush">' + company.members.map(m => `
+                        <li class="list-group-item">
+                            <strong>${m.person.name}</strong> (${m.role.text})<br>
+                            Idade: ${m.person.age} | Desde: ${m.since}<br>
+                            <span class="text-muted">CPF: ${m.person.taxId || '---'}</span>
+                        </li>
+                    `).join('') + '</ul>';
+                }
+
+                // Atividades secundárias
+                let atividadesHtml = '<div class="text-muted">Nenhuma atividade secundária encontrada.</div>';
+                if (data.sideActivities && data.sideActivities.length) {
+                    atividadesHtml = '<ul class="list-group list-group-flush">' + data.sideActivities.map(a => `<li class="list-group-item">${a.id} - ${a.text}</li>`).join('') + '</ul>';
+                }
+
+                // Inscrições estaduais/municipais
+                let inscricoesHtml = '<div class="text-muted">Nenhuma inscrição encontrada.</div>';
+                if (data.registrations && data.registrations.length) {
+                    inscricoesHtml = '<ul class="list-group list-group-flush">' + data.registrations.map(r => `
+                        <li class="list-group-item">
+                            <strong>IE:</strong> ${r.number} - <strong>UF:</strong> ${r.state} - <strong>Status:</strong> ${r.status.text} - <strong>Tipo:</strong> ${r.type.text} - <strong>Habilitada:</strong> ${r.enabled ? 'Sim' : 'Não'} - <strong>Data:</strong> ${r.statusDate}
+                        </li>
+                    `).join('') + '</ul>';
+                }
+
+                // Outras informações detalhadas
+                let outrosHtml = `<div class="row g-2">
+                    <div class="col-md-6"><strong>Porte:</strong> ${company.size ? company.size.text : ''}</div>
+                    <div class="col-md-6"><strong>Opção pelo Simples:</strong> ${company.simples ? (company.simples.optant ? 'Sim' : 'Não') : ''}</div>
+                    <div class="col-md-6"><strong>Data Opção Simples:</strong> ${company.simples && company.simples.since ? company.simples.since : ''}</div>
+                    <div class="col-md-6"><strong>Atualização:</strong> ${atualizacao}</div>
+                    <div class="col-md-6"><strong>Responsável:</strong> ${responsavel}</div>
+                    <div class="col-md-6"><strong>Email Resp.:</strong> ${emailResponsavel}</div>
+                    <div class="col-md-6"><strong>Site:</strong> ${site ? `<a href='${site}' target='_blank'>${site}</a>` : ''}</div>
+                    <div class="col-md-6"><strong>Observações:</strong> ${observacoes}</div>
+                </div>`;
+
+                // Situação
+                let situacaoHtml = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><strong>Situação:</strong> <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ${situacao && situacao.toUpperCase() === 'ATIVA' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">${situacao}</span></div>
+                    <div><strong>Desde:</strong> ${dataSituacao || ''}</div>
+                    <div class="md:col-span-2"><strong>Motivo:</strong> ${motivoSituacao || ''}</div>
+                </div>`;
+
+                container.innerHTML = `
+                <div class="bg-neutral-50 shadow-xl rounded-2xl mb-10 w-full">
+                  <div class="bg-gradient-to-r from-slate-900 to-slate-700 rounded-t-2xl px-8 py-4">
+                    <h4 class="text-white text-2xl font-extrabold flex items-center gap-3 drop-shadow-sm">
+                      <span class="material-symbols-rounded text-white text-3xl">business</span>
+                      ${company.name || ''}
+                    </h4>
+                  </div>
+                  <div class="px-4 sm:px-8 py-6">
+                    <div class="flex flex-wrap gap-2 border-b border-neutral-200 mb-6" id="tabs-bar">
+                      <button class="tab-btn px-4 py-2 font-semibold text-slate-900 border-b-2 border-slate-900 bg-slate-100 rounded-t flex items-center gap-1 transition-colors" id="tab-principal">
+                        <span class="material-symbols-rounded text-slate-900 text-base">info</span>
+                        Principal
+                      </button>
+                      <button class="tab-btn px-4 py-2 font-semibold text-neutral-500 hover:text-slate-900 flex items-center gap-1 transition-colors" id="tab-situacao">
+                        <span class="material-symbols-rounded text-neutral-500 text-base">verified_user</span>
+                        Situação
+                      </button>
+                      <button class="tab-btn px-4 py-2 font-semibold text-neutral-500 hover:text-slate-900 flex items-center gap-1 transition-colors" id="tab-socios">
+                        <span class="material-symbols-rounded text-neutral-500 text-base">groups</span>
+                        Sócios
+                      </button>
+                      <button class="tab-btn px-4 py-2 font-semibold text-neutral-500 hover:text-slate-900 flex items-center gap-1 transition-colors" id="tab-atividades">
+                        <span class="material-symbols-rounded text-neutral-500 text-base">work</span>
+                        Atividades
+                      </button>
+                      <button class="tab-btn px-4 py-2 font-semibold text-neutral-500 hover:text-slate-900 flex items-center gap-1 transition-colors" id="tab-inscricoes">
+                        <span class="material-symbols-rounded text-neutral-500 text-base">badge</span>
+                        Inscrições
+                      </button>
+                      <button class="tab-btn px-4 py-2 font-semibold text-neutral-500 hover:text-slate-900 flex items-center gap-1 transition-colors" id="tab-outros">
+                        <span class="material-symbols-rounded text-neutral-500 text-base">more_horiz</span>
+                        Outros
+                      </button>
+                    </div>
+                    <div id="pane-principal" class="tab-pane block">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">badge</span>CNPJ:</span> ${mascaraDado('cnpj', data.taxId || '')}</div>
+                        <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">storefront</span>Nome Fantasia:</span> ${nomeFantasia}</div>
+                        <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">business</span>Razão Social:</span> ${company.name || ''}</div>
+                        <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">apartment</span>Matriz/Filial:</span> ${matrizFilial}</div>
+                        <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">event</span>Data de Abertura:</span> ${mascaraDado('data', dataAbertura)}</div>
+                        <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">gavel</span>Natureza Jurídica:</span> ${natureza}</div>
+                        <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">payments</span>Capital Social:</span> ${capitalSocial}</div>
+                        <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">call</span>Telefone:</span> ${mascaraDado('telefone', phone)}</div>
+                        <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">mail</span>Email:</span> ${email}</div>
+                        <div class="md:col-span-2"><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">location_on</span>Endereço:</span> ${endereco}</div>
+                        <div><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">category</span>CNAE Principal:</span> ${cnaePrincipalCode} - ${cnaePrincipal}</div>
+                        <div class="md:col-span-2"><span class="font-semibold flex items-center gap-1"><span class="material-symbols-rounded text-slate-700 text-base">work</span>Atividade Principal:</span> ${cnaePrincipal}</div>
+                      </div>
+                    </div>
+                    <div id="pane-situacao" class="tab-pane hidden">${situacaoHtml}</div>
+                    <div id="pane-socios" class="tab-pane hidden">${membrosHtml}</div>
+                    <div id="pane-atividades" class="tab-pane hidden">${atividadesHtml}</div>
+                    <div id="pane-inscricoes" class="tab-pane hidden">${inscricoesHtml}</div>
+                    <div id="pane-outros" class="tab-pane hidden">${outrosHtml}</div>
+                  </div>
+                </div>
+                `;
+                // Tabs interatividade Tailwind
+                const tabIds = ['principal', 'situacao', 'socios', 'atividades', 'inscricoes', 'outros'];
+                tabIds.forEach((id, idx) => {
+                    document.getElementById('tab-' + id).onclick = function () {
+                        tabIds.forEach((tid, i) => {
+                            document.getElementById('tab-' + tid).classList.remove('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+                            document.getElementById('tab-' + tid).classList.add('text-gray-600');
+                            document.getElementById('pane-' + tid).classList.add('hidden');
+                            document.getElementById('pane-' + tid).classList.remove('block');
+                        });
+                        this.classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50');
+                        this.classList.remove('text-gray-600');
+                        document.getElementById('pane-' + id).classList.remove('hidden');
+                        document.getElementById('pane-' + id).classList.add('block');
+                    };
+                });
+            } catch (error) {
+                container.innerHTML = '<div class="alert alert-danger">Erro ao buscar dados. Verifique o CNPJ e tente novamente.</div>';
+            }
+        }
+
+        // Fechar modal ao clicar no X ou fundo
+        // Corrige o fechamento do modal para funcionar mesmo após re-renderizações
+        function fecharModal() {
+            document.getElementById('modal-bg').classList.add('hidden');
+            document.getElementById('modal-card').classList.add('hidden');
+            document.getElementById('dados').innerHTML = '';
+        }
+        // Sempre reatribui os eventos ao abrir o modal
+        function atribuirEventosFecharModal() {
+            document.getElementById('modal-bg').onclick = fecharModal;
+            document.getElementById('fecharModal').onclick = fecharModal;
+        }
+        // Garante que os eventos sejam atribuídos ao abrir qualquer modal
+        const observer = new MutationObserver(() => {
+            if (!document.getElementById('modal-card').classList.contains('hidden')) {
+                atribuirEventosFecharModal();
+            }
+        });
+        observer.observe(document.getElementById('modal-card'), { attributes: true, attributeFilter: ['class'] });
+
+        function acionarBusca() {
+            const cnpj = document.getElementById('cnpjInput').value.replace(/\D/g, '');
+            if (cnpj.length === 14) {
+                buscarCNPJ(cnpj);
+            } else {
+                // Exibe modal de erro
+                document.getElementById('modal-bg').classList.remove('hidden');
+                document.getElementById('modal-card').classList.remove('hidden');
+                document.getElementById('dados').innerHTML = '<div class="flex flex-col items-center py-16"><span class="material-symbols-rounded text-red-400 text-6xl mb-4">error</span><div class="text-red-600 font-semibold text-lg">CNPJ inválido!</div></div>';
+            }
+        }
+        document.getElementById('buscarBtn').addEventListener('click', acionarBusca);
+        document.getElementById('cnpjInput').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                acionarBusca();
+            }
+        });
+    </script>
+    <style>
+        /* Oculta a barra de rolagem (scrollbar) do modal */
+        .scrollbar-hide {
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE e Edge */
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+            /* Chrome, Safari e Opera */
+        }
+
+        /* Animação fade-in para modal */
+        @keyframes fade-in-up {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fade-in-up 0.3s cubic-bezier(.4, 0, .2, 1);
+        }
+    </style>
+    </script>
+</body>
+
+</html>
